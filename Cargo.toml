@@ -6,5 +6,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+cid = { version = "0.8.4", default-features = false }
+fvm_shared = { version = "0.6.1", git = "https://github.com/filecoin-project/ref-fvm", rev = "297a7694" }
 fvm_ipld_blockstore = { version = "0.1.0", git = "https://github.com/filecoin-project/ref-fvm", rev = "297a7694" }
 fvm_ipld_hamt = { version = "0.5.1", git = "https://github.com/filecoin-project/ref-fvm", rev = "297a7694" }
+serde = { version = "1.0.136", features = ["derive"] }
