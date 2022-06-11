@@ -7,6 +7,7 @@ edition = "2021"
 
 [dependencies]
 cid = { version = "0.8.4", default-features = false }
+multihash = { version = "0.16.2", default-features = false, features = ["sha2"] }
 fvm_shared = { version = "0.6.1", git = "https://github.com/filecoin-project/ref-fvm", rev = "297a7694" }
 fvm_ipld_blockstore = { version = "0.1.0", git = "https://github.com/filecoin-project/ref-fvm", rev = "297a7694" }
 fvm_ipld_hamt = { version = "0.5.1", git = "https://github.com/filecoin-project/ref-fvm", rev = "297a7694" }

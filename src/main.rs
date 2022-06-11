@@ -1,6 +1,7 @@
 use serde::Serialize;
 use serde::de::DeserializeOwned;
 use cid::Cid;
+use multihash::{Code, MultihashDigest};
 use fvm_ipld_blockstore::{Blockstore, MemoryBlockstore};
 use fvm_ipld_hamt::{BytesKey, Error as HamtError, Hamt};
 use fvm_shared::address::Address;
@@ -41,6 +42,8 @@ pub struct BountyKey {
     pub address: Address
 }
 
+const RAW: u64 = 0x55;
+
 fn main() {
     println!("Hello, world!");
     let store = MemoryBlockstore::default();
@@ -54,6 +57,11 @@ fn main() {
     let bounties = make_empty_map::<_, ()>(&store, HAMT_BIT_WIDTH)
             .flush()
             .map_err(|e| panic!("failed to create empty map: {}", e));
+
+    // https://crates.io/crates/cid
+    let h = Code::Sha2_256.digest(b"beep boop");
+    let cid = Cid::new_v1(RAW, h);
+    let data = cid.to_bytes();
 }
 
 #[test]

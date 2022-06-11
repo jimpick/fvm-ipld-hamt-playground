@@ -193,6 +193,7 @@ dependencies = [
  "fvm_ipld_blockstore",
  "fvm_ipld_hamt",
  "fvm_shared",
+ "multihash",
  "serde",
 ]
 
@@ -343,9 +344,11 @@ checksum = "e3db354f401db558759dfc1e568d010a5d4146f4d3f637be1275ec4a3cf09689"
 dependencies = [
  "blake2b_simd",
  "core2",
+ "digest",
  "multihash-derive",
  "serde",
  "serde-big-array",
+ "sha2",
  "unsigned-varint",
 ]
 
