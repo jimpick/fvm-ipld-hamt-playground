@@ -190,7 +190,8 @@ name = "fvm-ipld-hamt-playground"
 version = "0.1.0"
 dependencies = [
  "cid",
- "fvm_ipld_blockstore",
+ "fvm_ipld_blockstore 0.1.0",
+ "fvm_ipld_encoding 0.2.1",
  "fvm_ipld_hamt",
  "fvm_shared",
  "multihash",
@@ -208,6 +209,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "fvm_ipld_blockstore"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "688239a96199577f6705a3f9689abfd795f867f91f5847bc7e236017cc672df7"
+dependencies = [
+ "anyhow",
+ "cid",
+ "multihash",
+]
+
+[[package]]
 name = "fvm_ipld_encoding"
 version = "0.2.0"
 source = "git+https://github.com/filecoin-project/ref-fvm?rev=297a7694#297a7694ff9a584880632dde8826d9134d976fd9"
@@ -215,7 +227,25 @@ dependencies = [
  "anyhow",
  "cid",
  "cs_serde_bytes",
- "fvm_ipld_blockstore",
+ "fvm_ipld_blockstore 0.1.0",
+ "multihash",
+ "serde",
+ "serde_ipld_dagcbor",
+ "serde_repr",
+ "serde_tuple",
+ "thiserror",
+]
+
+[[package]]
+name = "fvm_ipld_encoding"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "39a5b85beb7f0c612abbe36ce013d50fd4c5304098f7b439a32c82526d7d800a"
+dependencies = [
+ "anyhow",
+ "cid",
+ "cs_serde_bytes",
+ "fvm_ipld_blockstore 0.1.1",
  "multihash",
  "serde",
  "serde_ipld_dagcbor",
@@ -234,8 +264,8 @@ dependencies = [
  "cid",
  "cs_serde_bytes",
  "forest_hash_utils",
- "fvm_ipld_blockstore",
- "fvm_ipld_encoding",
+ "fvm_ipld_blockstore 0.1.0",
+ "fvm_ipld_encoding 0.2.0",
  "libipld-core",
  "multihash",
  "once_cell",
@@ -257,8 +287,8 @@ dependencies = [
  "cs_serde_bytes",
  "data-encoding",
  "data-encoding-macro",
- "fvm_ipld_blockstore",
- "fvm_ipld_encoding",
+ "fvm_ipld_blockstore 0.1.0",
+ "fvm_ipld_encoding 0.2.0",
  "lazy_static",
  "log",
  "multihash",

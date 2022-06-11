@@ -3,6 +3,7 @@ use serde::de::DeserializeOwned;
 use cid::Cid;
 use multihash::{Code, MultihashDigest};
 use fvm_ipld_blockstore::{Blockstore, MemoryBlockstore};
+use fvm_ipld_encoding::RawBytes;
 use fvm_ipld_hamt::{BytesKey, Error as HamtError, Hamt};
 use fvm_shared::address::Address;
 use fvm_shared::HAMT_BIT_WIDTH;
@@ -37,6 +38,8 @@ where
     Map::<_, V>::load_with_bit_width(root, store, HAMT_BIT_WIDTH)
 }
 
+
+#[derive(Serialize, Debug)]
 pub struct BountyKey {
     pub piece_cid: Cid,
     pub address: Address
@@ -61,7 +64,19 @@ fn main() {
     // https://crates.io/crates/cid
     let h = Code::Sha2_256.digest(b"beep boop");
     let cid = Cid::new_v1(RAW, h);
-    let data = cid.to_bytes();
+    // let data = cid.to_bytes();
+
+    let key = BountyKey {
+        piece_cid: cid,
+        address: Address::new_id(100)
+    };
+
+    println!("BountyKey {:?}", &key);
+
+    let rawBytes = RawBytes::serialize(&key).unwrap();
+    let bytes = rawBytes.bytes();
+    println!("BountyKey bytes {:?}", &bytes);
+
 }
 
 #[test]

@@ -11,4 +11,5 @@ multihash = { version = "0.16.2", default-features = false, features = ["sha2"] 
 fvm_shared = { version = "0.6.1", git = "https://github.com/filecoin-project/ref-fvm", rev = "297a7694" }
 fvm_ipld_blockstore = { version = "0.1.0", git = "https://github.com/filecoin-project/ref-fvm", rev = "297a7694" }
 fvm_ipld_hamt = { version = "0.5.1", git = "https://github.com/filecoin-project/ref-fvm", rev = "297a7694" }
+fvm_ipld_encoding = "0.2.0"
 serde = { version = "1.0.136", features = ["derive"] }
