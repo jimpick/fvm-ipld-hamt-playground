@@ -57,9 +57,11 @@ fn main() {
     names.set(2, "Sheldon".to_string()).unwrap();
     println!("2: {}", names.get(&2).unwrap().unwrap());
 
-    let bounties = make_empty_map::<_, ()>(&store, HAMT_BIT_WIDTH)
+    let bounties_cid = make_empty_map::<_, ()>(&store, HAMT_BIT_WIDTH)
             .flush()
-            .map_err(|e| panic!("failed to create empty map: {}", e));
+            .unwrap();
+
+    let mut bounties = make_map_with_root::<_, String>(&bounties_cid, &store).unwrap();
 
     // https://crates.io/crates/cid
     let h = Code::Sha2_256.digest(b"beep boop");
@@ -73,10 +75,11 @@ fn main() {
 
     println!("BountyKey {:?}", &key);
 
-    let rawBytes = RawBytes::serialize(&key).unwrap();
-    let bytes = rawBytes.bytes();
+    let raw_bytes = RawBytes::serialize(&key).unwrap();
+    let bytes = raw_bytes.bytes();
     println!("BountyKey bytes {:?}", &bytes);
 
+    bounties.set(BytesKey::from(bytes), "Jim".to_string()).unwrap();
 }
 
 #[test]
