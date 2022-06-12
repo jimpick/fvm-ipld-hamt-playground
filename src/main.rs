@@ -41,7 +41,7 @@ where
 }
 
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct BountyKey {
     pub piece_cid: Cid,
     pub address: Address,
@@ -100,19 +100,22 @@ fn main() {
     let retrieved2_value = bounties.get(&key2_clone);
     println!("Retrieved value key2 {:?}", &retrieved2_value);
 
-    bounties.for_each(|k, v: &BountyValue| {
-      println!("k {:?} v {:?}", &k, &v);
-      Ok(())
-    });
-
     list_bounties(&bounties);
 }
 
-fn list_bounties(&bounties: Map<_, _, BountyValue>) {
+fn list_bounties(bounties: &Map<MemoryBlockstore, BountyValue>) {
+    println!("Bounties:");
     bounties.for_each(|k, v: &BountyValue| {
-      println!("k {:?} v {:?}", &k, &v);
-      Ok(())
-    });
+        // println!("XXX => k {:?} v {:?}", &k, &v);
+        // let key = BountyKey::deserialize(k.to_bytes()).unwrap();
+        // println!("XXX => key {:?} v {:?}", &key, &v);
+        // println!("YYY => k {:?} v {:?}", &k.as_slice(), &v);
+        let raw_bytes = RawBytes::new(k.as_slice().to_vec());
+        // println!("raw_bytes {:?}", &raw_bytes);
+        let key: BountyKey = raw_bytes.deserialize().unwrap();
+        println!("  key: {:?} value: {:?}", &key, &v);
+        Ok(())
+    }).unwrap();
 }
 
 // https://github.com/filecoin-project/ref-fvm/blob/29ac9a32459ac1172c69c68640182570b24562dc/ipld/hamt/tests/hamt_tests.rs
