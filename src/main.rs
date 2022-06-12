@@ -104,6 +104,15 @@ fn main() {
       println!("k {:?} v {:?}", &k, &v);
       Ok(())
     });
+
+    list_bounties(&bounties);
+}
+
+fn list_bounties(&bounties: Map<_, _, BountyValue>) {
+    bounties.for_each(|k, v: &BountyValue| {
+      println!("k {:?} v {:?}", &k, &v);
+      Ok(())
+    });
 }
 
 // https://github.com/filecoin-project/ref-fvm/blob/29ac9a32459ac1172c69c68640182570b24562dc/ipld/hamt/tests/hamt_tests.rs
