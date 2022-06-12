@@ -1,12 +1,14 @@
-use serde::Serialize;
+use serde::{Serialize, Deserialize};
 use serde::de::DeserializeOwned;
 use cid::Cid;
 use multihash::{Code, MultihashDigest};
 use fvm_ipld_blockstore::{Blockstore, MemoryBlockstore};
 use fvm_ipld_encoding::RawBytes;
 use fvm_ipld_hamt::{BytesKey, Error as HamtError, Hamt};
-use fvm_shared::address::Address;
 use fvm_shared::HAMT_BIT_WIDTH;
+use fvm_shared::address::Address;
+use fvm_shared::bigint::bigint_ser;
+use fvm_shared::econ::TokenAmount;
 
 // https://docs.rs/fvm_ipld_hamt/0.5.1/fvm_ipld_hamt/
 // https://github.com/Schwartz10/sample-erc20-fvm-actor/blob/43acb18d9509859d9adc1d50e1fed2d2cf6f023e/src/lib.rs#L76
@@ -42,7 +44,13 @@ where
 #[derive(Serialize, Debug)]
 pub struct BountyKey {
     pub piece_cid: Cid,
-    pub address: Address
+    pub address: Address,
+}
+
+#[derive(Serialize, Deserialize, PartialEq, Debug)]
+pub struct BountyValue {
+    #[serde(with = "bigint_ser")]
+    pub amount: TokenAmount,
 }
 
 const RAW: u64 = 0x55;
@@ -61,26 +69,44 @@ fn main() {
             .flush()
             .unwrap();
 
-    let mut bounties = make_map_with_root::<_, String>(&bounties_cid, &store).unwrap();
+    let mut bounties = make_map_with_root::<_, BountyValue>(&bounties_cid, &store).unwrap();
 
     // https://crates.io/crates/cid
     let h = Code::Sha2_256.digest(b"beep boop");
     let cid = Cid::new_v1(RAW, h);
     // let data = cid.to_bytes();
 
-    let key = BountyKey {
-        piece_cid: cid,
-        address: Address::new_id(100)
-    };
-
-    println!("BountyKey {:?}", &key);
-
-    let raw_bytes = RawBytes::serialize(&key).unwrap();
+    let key1 = BountyKey { piece_cid: cid, address: Address::new_id(100) };
+    println!("key1 {:?}", &key1);
+    let raw_bytes = RawBytes::serialize(&key1).unwrap();
     let bytes = raw_bytes.bytes();
-    println!("BountyKey bytes {:?}", &bytes);
+    println!("key1 bytes {:?}", &bytes);
+    let bounty1_value = BountyValue { amount: TokenAmount::from(10) };
+    let key1 = BytesKey::from(bytes);
+    let key1_clone = key1.clone();
+    bounties.set(key1, bounty1_value).unwrap();
+    let retrieved1_value = bounties.get(&key1_clone);
+    println!("Retrieved value key1 {:?}", &retrieved1_value);
 
-    bounties.set(BytesKey::from(bytes), "Jim".to_string()).unwrap();
+    let key2 = BountyKey { piece_cid: cid, address: Address::new_id(101) };
+    println!("key2 {:?}", &key2);
+    let raw_bytes = RawBytes::serialize(&key2).unwrap();
+    let bytes = raw_bytes.bytes();
+    println!("key2 bytes {:?}", &bytes);
+    let bounty2_value = BountyValue { amount: TokenAmount::from(20) };
+    let key2 = BytesKey::from(bytes);
+    let key2_clone = key2.clone();
+    bounties.set(key2, bounty2_value).unwrap();
+    let retrieved2_value = bounties.get(&key2_clone);
+    println!("Retrieved value key2 {:?}", &retrieved2_value);
+
+    bounties.for_each(|k, v: &BountyValue| {
+      println!("k {:?} v {:?}", &k, &v);
+      Ok(())
+    });
 }
+
+// https://github.com/filecoin-project/ref-fvm/blob/29ac9a32459ac1172c69c68640182570b24562dc/ipld/hamt/tests/hamt_tests.rs
 
 #[test]
 fn test_basics() {
